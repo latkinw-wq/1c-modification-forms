@@ -1,0 +1,3 @@
+# Все текстовые файлы — LF, чтобы diff на GitHub был читаемым
+* text=auto eol=lf
+*.bsl text eol=lf
