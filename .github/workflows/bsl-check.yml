@@ -1,0 +1,28 @@
+name: bsl-check
+
+# Проверки, которые не требуют платформы 1С: парность блоков, кодировка,
+# число экспортных методов, отсутствие секретов, версия в шапке против тега.
+# Разбор грамматики через bsl-language-server можно добавить отдельным шагом,
+# когда он будет проверен локально.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  bsl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Структура, кодировка, секреты
+        run: |
+          TAG_ARG=""
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            TAG_ARG="--tag ${{ github.ref_name }}"
+          fi
+          python3 .github/check_bsl.py src/*.bsl --expect-exports 43 $TAG_ARG
